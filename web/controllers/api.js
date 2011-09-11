@@ -14,7 +14,7 @@ exports.controller = function(app, render) {
 			Game.join(user, function(game) {
 				if (openGames[game.id]) {
 					var otherType = (game.user_id != user.id) ? 'user' : 'opponent';
-					openGames[game.id]otherType.socket.emit('game_update', {
+					openGames[game.id].otherType.socket.emit('game_update', {
 						game: game
 					});
 				}
@@ -71,7 +71,7 @@ exports.controller = function(app, render) {
 				game.save().on('success', function() {
 					if (openGames[game.id]) {
 						var otherType = (game.user_id != user.id) ? 'user' : 'opponent';
-						openGames[game.id]otherType.socket.emit('game_update', {
+						openGames[game.id].otherType.socket.emit('game_update', {
 							game: game
 						});
 					}
@@ -105,7 +105,7 @@ exports.controller = function(app, render) {
 				game.save().on('success', function() {
 					if (openGames[game.id]) {
 						var otherType = (game.user_id != user.id) ? 'user' : 'opponent';
-						openGames[game.id]otherType.socket.emit('game_update', {
+						openGames[game.id].otherType.socket.emit('game_update', {
 							game: game
 						});
 					}
@@ -139,7 +139,7 @@ exports.controller = function(app, render) {
 				game.save().on('success', function() {
 					if (openGames[game.id]) {
 						var otherType = (game.user_id != user.id) ? 'user' : 'opponent';
-						openGames[game.id]otherType.socket.emit('game_update', {
+						openGames[game.id].otherType.socket.emit('game_update', {
 							game: game
 						});
 					}
@@ -222,7 +222,7 @@ exports.controller = function(app, render) {
 			}
 			
 			var otherType = (game.user_id != user.id) ? 'user' : 'opponent';
-			openGames[game.id]otherType.socket.emit('other_player_disconnect', {
+			openGames[game.id].otherType.socket.emit('other_player_disconnect', {
 				game: game
 			});
 			delete openGames[game.id];
