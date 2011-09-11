@@ -12,6 +12,13 @@ exports.controller = function(app, render) {
 			}
 			
 			Game.join(user, function(game) {
+				if (openGames[game.id]) {
+					var otherType = (game.user_id != user.id) ? 'user' : 'opponent';
+					openGames[game.id]otherType.socket.emit('game_update', {
+						game: game
+					});
+				}
+				
 				res.send(game.toJSON());
 			});
 		});
@@ -63,8 +70,8 @@ exports.controller = function(app, render) {
 				game.losses++;
 				game.save().on('success', function() {
 					if (openGames[game.id]) {
-						var type = (game.user_id == user.id) ? 'user' : 'opponent';
-						openGames[game.id][type].socket.emit('game_update', {
+						var otherType = (game.user_id != user.id) ? 'user' : 'opponent';
+						openGames[game.id]otherType.socket.emit('game_update', {
 							game: game
 						});
 					}
@@ -97,8 +104,8 @@ exports.controller = function(app, render) {
 				game.ties++;
 				game.save().on('success', function() {
 					if (openGames[game.id]) {
-						var type = (game.user_id == user.id) ? 'user' : 'opponent';
-						openGames[game.id][type].socket.emit('game_update', {
+						var otherType = (game.user_id != user.id) ? 'user' : 'opponent';
+						openGames[game.id]otherType.socket.emit('game_update', {
 							game: game
 						});
 					}
@@ -131,8 +138,8 @@ exports.controller = function(app, render) {
 				game.wins++;
 				game.save().on('success', function() {
 					if (openGames[game.id]) {
-						var type = (game.user_id == user.id) ? 'user' : 'opponent';
-						openGames[game.id][type].socket.emit('game_update', {
+						var otherType = (game.user_id != user.id) ? 'user' : 'opponent';
+						openGames[game.id]otherType.socket.emit('game_update', {
 							game: game
 						});
 					}
@@ -184,10 +191,9 @@ exports.controller = function(app, render) {
 	};
 	
 	io.on('connection', function(socket) {
+		var game = null;
+		var user = null;
 		socket.on('auth', function(data) {
-			var game = null;
-			var user = null;
-			
 			Game.find(data.game_id).on('success', function(thisGame) {
 				game = thisGame;
 				
@@ -207,7 +213,19 @@ exports.controller = function(app, render) {
 			});
 		});
 		socket.on('disconnect', function() {
-			delete openSockets[socket.id];
+			if (!game || !user) {
+				return;
+			}
+			
+			if (!openGames[game.id]) {
+				return;
+			}
+			
+			var otherType = (game.user_id != user.id) ? 'user' : 'opponent';
+			openGames[game.id]otherType.socket.emit('other_player_disconnect', {
+				game: game
+			});
+			delete openGames[game.id];
 		})
 	});
 };
