@@ -1,5 +1,6 @@
 var controllers = [
-	'home'
+	'home',
+	'api'
 ];
 
 var render = function(controller, res, path, vars, options) {
@@ -39,7 +40,7 @@ var render = function(controller, res, path, vars, options) {
 
 exports.init = function(app) {
 	controllers.forEach(function(controllerName, i) {
-		var controller = require('./' + controllerName + '.js');
+		var controller = require('./' + controllerName);
 		controller.controller(app, function(res, path, vars, options) {
 			render(controllerName, res, path, vars, options);
 		});

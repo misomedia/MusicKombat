@@ -1,7 +1,6 @@
 var express = require('express');
-var io = require('socket.io');
 var app = express.createServer();
-io.listen(app);
+var io = require('socket.io').listen(app);
 
 app.configure(function(){
     app.use(express.methodOverride());
@@ -24,6 +23,7 @@ app.configure(function(){
 });
 
 global.fs = require('fs');
+global.io = io;
 global.utils = require('./lib/helpers/utils');
 
 var hooks = require('./lib/hooks');
