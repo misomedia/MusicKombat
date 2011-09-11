@@ -33,6 +33,8 @@ hooks.events.init(app);
 var controllers = require('./controllers/_init');
 controllers.init(app);
 
-var port = process.argv[2] || 41019;
-var server = process.argv[3] || 'localhost';
-app.listen(port, server);
+//var port = process.argv[2] || 41019;
+var port = process.argv[2] || 80;
+//var server = process.argv[3] || 'localhost';
+//app.listen(port, server);
+app.listen(port);
