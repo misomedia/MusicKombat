@@ -1,0 +1,4 @@
+www:
+  type: nodejs
+db:
+  type: mysql
