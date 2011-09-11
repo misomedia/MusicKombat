@@ -35,6 +35,5 @@ controllers.init(app);
 
 //var port = process.argv[2] || 41019;
 var port = process.argv[2] || 80;
-//var server = process.argv[3] || 'localhost';
-//app.listen(port, server);
-app.listen(port);
+var server = process.argv[3] || 'localhost';
+app.listen(port, server);
