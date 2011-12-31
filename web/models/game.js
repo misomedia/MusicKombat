@@ -15,9 +15,9 @@ var Game = global.sequelize.define('game', {
 	timestamps: false,
 	
 	classMethods: {
-		create: function(userId, callback) {
+		create: function(user, callback) {
 			var game = Game.build();
-			game.user_id = userId;
+			game.user_id = user.id;
 			game.date_created = new Date();
 			game.date_updated = new Date();
 			game.save().on('success', function() {
@@ -33,7 +33,7 @@ var Game = global.sequelize.define('game', {
 				]
 			}).on('success', function(game) {
 				if (!game) {
-					Game.create(user.id, callback);
+					Game.create(user, callback);
 					return;
 				}
 				
@@ -62,10 +62,10 @@ var Game = global.sequelize.define('game', {
 			return false;
 		},
 		
-		toJSON: function() {
-			return JSON.stringify({
+		toDictionary: function() {
+			return {
 				id: this.id,
-				user_id: this.id,
+				user_id: this.user_id,
 				opponent_id: this.opponent_id,
 				date_created: this.date_created,
 				date_updated: this.date_updated,
@@ -73,7 +73,11 @@ var Game = global.sequelize.define('game', {
 				wins: this.wins,
 				ties: this.ties,
 				losses: this.losses
-			});
+			};
+		},
+		
+		toJSON: function() {
+			return JSON.stringify(this.toDictionary());
 		}
 	}
 });
